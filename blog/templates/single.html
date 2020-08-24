@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Django blog{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block profile %}
+<div class="fh5co-bio">
+	<figure>
+		<img src="{{post.article_author.image.url}}" alt="Free HTML5 Bootstrap Template" class="img-responsive">
+	</figure>
+	<h3 class="heading">About Me</h3>
+	<h2>{{post.article_author.name.get_full_name}}</h2>
+	<h4>{{post.article_author.name.email}}</h4>
+<!--		Get user information in django templates-->
+<!--	<h4>{{post.article_author.name.username}}</h4>-->
+<!--	<h5>{{post.article_author.name.last_login}}</h5>-->
+<!--	<h5>{{post.article_author.name.get_short_name}}</h5>-->
+	<p>{{post.article_author.details}}. </p>
+	<ul class="fh5co-social">
+			<li><a href="#"><i class="icon-twitter"></i></a></li>
+			<li><a href="#"><i class="icon-facebook"></i></a></li>
+			<li><a href="#"><i class="icon-instagram"></i></a></li>
+		</ul>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if post.id > first.id %}
+<a href="{% url 'blog:single' post.id|add:'-1' %}" class="fh5co-post-prev"><span><i class="icon-chevron-left"></i> Prev</span></a>
+{% endif %}
+{% if post.id < last.id %}
+<a href="{% url 'blog:single' post.id|add:'1' %}" class="fh5co-post-next"><span>Next <i class="icon-chevron-right"></i></span></a>
+{% endif %}
+<div class="row fh5co-post-entry single-entry">
+	<article class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
+		<figure class="animate-box">
+			<a href="{% url 'blog:single' post.id %}"><img src="{{post.image.url}}" alt="Image" class="img-responsive"></a>
+		</figure>
+		<span class="fh5co-meta animate-box"><a href="{% url 'blog:category' post.category.name %}">{{post.category.name}}</a></span>
+		<h5 class="fh5co-article-title animate-box">{{post.title}}</h5>
+		<span class="fh5co-meta fh5co-date animate-box">{{post.posted_on}}</span>
+
+		<div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-left content-article">
+			<div class="row">
+				<div class="col-lg-12 cp-r animate-box">
+					<p>{{post.body}}.</p>
+				</div>
+			</div>
+		</div>
+	</article>
+
+	{% for r in related %}
+	<article class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
+		<figure class="animate-box">
+			<a href="{% url 'blog:single' r.id %}"><img src="{{r.image.url}}" alt="Image" class="img-responsive"></a>
+		</figure>
+		<span class="fh5co-meta animate-box"><a href="{% url 'blog:category' r.category.name %}">{{r.category.name}}</a></span>
+		<h5 class="fh5co-article-title animate-box">{{r.title}}</h5>
+		<span class="fh5co-meta fh5co-date animate-box">{{r.posted_on}}</span>
+
+		<div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-left content-article">
+			<div class="row">
+				<div class="col-lg-12 cp-r animate-box">
+					<p>{{r.body|truncatewords:20}}.</p>
+				</div>
+			</div>
+		</div>
+	</article>
+	{% endfor %}
+</div>
+
+	<div class="container">
+		{% for com in comment %}
+		<h3>Name: {{com.name}}</h3>
+		<h4>{{com.email}}</h4>
+		<p>{{com.post_comment}}</p>
+		{% empty %}
+		<h4>No comment found</h4>
+		{% endfor %}
+	</div>
+
+	<div class="container">
+		<div class="panel panel-default">
+  			<div class="panel-body">
+    			Please write your opinion
+				<form method="POST">
+					{% csrf_token %}
+					{{form.as_p}}
+					<button class="btn btn-success">Comment</button>
+				</form>
+  			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}{% endblock %}

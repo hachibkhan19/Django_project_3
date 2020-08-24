@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Django blog{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Registration form</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn btn-primary">Register</button>
+    </form>
+</div>
+{% endblock %}
+{% block script %}{% endblock %}

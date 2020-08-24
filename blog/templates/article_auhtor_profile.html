@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Django blog{% endblock %}
+{% block stylesheet %}
+    <style>
+    .alert{
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+    margin-top: 200px;
+}
+    </style>
+{% endblock %}
+{% block profile %}
+	<div class="fh5co-bio">
+		<figure>
+			<img src="{{auth.image.url}}" alt="Free HTML5 Bootstrap Template" class="img-responsive">
+		</figure>
+		<h3 class="heading">About Me</h3>
+		<h2>{{auth.name.get_full_name}}</h2>
+		<p>{{auth.details}}. </p>
+		<ul class="fh5co-social">
+			<li><a href="#"><i class="icon-twitter"></i></a></li>
+			<li><a href="#"><i class="icon-facebook"></i></a></li>
+			<li><a href="#"><i class="icon-instagram"></i></a></li>
+		</ul>
+	</div>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <a href="{% url 'blog:create_new_post' %}" class="btn btn-primary pull pull-right">Add new article</a>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Posted_on</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in post %}
+            <tr>
+                <td>{{p.title}}</td>
+                <td>{{p.posted_on}}</td>
+                <td><a href="{% url 'blog:delete_post' p.id %}">Delete</a>||<a href="{% url 'blog:update_post' p.id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block script %}{% endblock %}
